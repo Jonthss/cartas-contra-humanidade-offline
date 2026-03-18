@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Container, Flex, Button, Heading, Input, VStack, HStack, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
-// Cria o formato de cada jogador
 interface Player {
   id: string;
   name: string;
@@ -41,7 +40,7 @@ export function Home(): JSX.Element {
 
   return (
     <Container maxW="container.sm" minH="100vh" py={10}>
-      <Heading mb={10} textAlign="center">Cards Against Humanity</Heading>
+      <Heading mb={10} textAlign="center">Cards Against Humanity Offline</Heading>
       
       <Flex direction="column" gap={6} w="full" px={4} mb={10}>
         <Button 
