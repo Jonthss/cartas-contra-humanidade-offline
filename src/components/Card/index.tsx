@@ -10,7 +10,7 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
   const isBlack = type === 'BLACK';
   const textoLimpo = message ? message.replace(/%s/g, '______') : '';
 
-  const corFundo = isBlack ? '#191919' : '#ffffff';
+  const corFundo = isBlack ? '#000000' : '#ffffff';
   const corTexto = isBlack ? '#ffffff' : '#191919';
 
   return (

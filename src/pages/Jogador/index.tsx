@@ -169,7 +169,7 @@ export function Jogador() {
               boxShadow={isSelecionada ? '0 0 0 4px #3182ce' : 'none'}
               borderRadius="10px"
               position="relative" 
-              zIndex={isSelecionada ? 10 : 1} /* <-- Previne que a carta fique atrás das outras */
+              zIndex={isSelecionada ? 10 : 1}
             >
               {isSelecionada && selecionadas.length > 1 && (
                 <Badge
