@@ -11,7 +11,7 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
   const textoLimpo = message ? message.replace(/%s/g, '______') : '';
 
   // Cores exatas do projeto original
-  const corFundo = isBlack ? '#191919' : '#ffffff';
+  const corFundo = isBlack ? '#000000' : '#ffffff';
   const corTexto = isBlack ? '#ffffff' : '#191919';
 
   return (
@@ -58,13 +58,12 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
           />
           
           <Image
-            src="/cover.png"
+            src={isBlack ? "/image-invert.png" : "/cover.png"}
             alt="CAH Logo"
             h="40px"
             w="auto"
             objectFit="contain"
             alignSelf="flex-start"
-            filter={isBlack ? 'invert(100%)' : 'none'}
           />
         </Flex>
 

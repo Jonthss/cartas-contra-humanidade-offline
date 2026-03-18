@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Home } from './pages/Home';
-import { Mesa } from './pages/mesa'; // Confirme se a sua pasta está com "m" minúsculo ou maiúsculo
+import { Mesa } from './pages/mesa'; 
 import { Jogador } from './pages/Jogador';
 
 import '@fontsource/roboto/400.css';
