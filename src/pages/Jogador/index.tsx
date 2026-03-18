@@ -16,12 +16,10 @@ export function Jogador() {
     sortearCarta(), sortearCarta(), sortearCarta(), sortearCarta(),
   ]);
 
-  // Agora guardamos uma LISTA de números (para saber a ordem das cartas)
   const [selecionadas, setSelecionadas] = useState<number[]>([]);
   const [confirmadas, setConfirmadas] = useState<number[]>([]);
   const [cartaRevelada, setCartaRevelada] = useState(false);
 
-  // Seleciona e desmarca as cartas mantendo a ordem dos cliques
   function handleSelecionar(index: number) {
     if (selecionadas.includes(index)) {
       setSelecionadas(selecionadas.filter((i) => i !== index));
@@ -34,7 +32,7 @@ export function Jogador() {
 
   function confirmarCarta() {
     if (selecionadas.length > 0) {
-      setConfirmadas(selecionadas);
+      setConfirmadas([...selecionadas]);
       setSelecionadas([]);
     }
   }
@@ -45,7 +43,6 @@ export function Jogador() {
     }
   }
 
-  // Troca APENAS as cartas que foram usadas na rodada
   function pegarNovaCarta() {
     if (confirmadas.length > 0) {
       const novaMao = [...mao];
@@ -53,7 +50,6 @@ export function Jogador() {
         novaMao[index] = sortearCarta();
       });
       setMao(novaMao);
-      
       setConfirmadas([]);
       setCartaRevelada(false);
     }
@@ -65,33 +61,56 @@ export function Jogador() {
     setCartaRevelada(false);
   }
 
-  // TELA 2: CARTAS CONFIRMADAS NA MESA
+  // =========================================================================
+  // TELA 2: CARTAS JOGADAS NA "MESA" (AGORA EM CARROSSEL)
+  // =========================================================================
   if (confirmadas.length > 0) {
     return (
-      <Container minH="100vh" centerContent justifyContent="center" maxW="full" bg="gray.50" py={8}>
-        
-        <Button pos="fixed" top={4} left={4} zIndex={10} _active={{ transform: 'none' }} onClick={() => navigate('/')}>
+      <Container minH="100vh" maxW="full" bg="gray.50" py={8} px={0} overflow="hidden">
+        <Button 
+          pos="fixed" top={4} left={4} zIndex={100} 
+          _active={{ transform: 'none' }} onClick={() => navigate('/')}
+        >
           Sair da Partida
         </Button>
 
-        <VStack spacing={8} w="full">
+        <VStack spacing={8} w="full" mt={16}>
           <Text fontSize="2xl" fontWeight="bold" textAlign="center">
             {!cartaRevelada ? "Aguardando..." : "Sua(s) Resposta(s):"}
           </Text>
           
-          {/* Caixa que agrupa e alinha todas as cartas jogadas */}
+          {/* NOVO CARROSSEL DE RESPOSTAS */}
           <Flex 
+            w="full"
+            overflowX="auto" 
+            flexWrap="nowrap" 
             gap={6} 
-            wrap="wrap" 
-            justify="center" 
-            onClick={revelarCarta} 
+            px="15%" 
+            pt={10} 
+            pb={10} 
+            onClick={revelarCarta} // Clicar em qualquer lugar do carrossel revela
             cursor={!cartaRevelada ? "pointer" : "default"}
+            css={{
+              scrollSnapType: 'x mandatory',
+              WebkitOverflowScrolling: 'touch',
+              '&::-webkit-scrollbar': { display: 'none' },
+              scrollbarWidth: 'none',
+            }}
           >
             {confirmadas.map((indiceDaMao, pos) => (
-              <VStack key={indiceDaMao}>
+              <Box 
+                key={indiceDaMao}
+                flexShrink={0} 
+                scrollSnapAlign="center" 
+                borderRadius="10px"
+                position="relative" 
+              >
                 {/* Mostra qual é a 1ª e a 2ª carta apenas quando reveladas */}
                 {confirmadas.length > 1 && cartaRevelada && (
-                  <Badge colorScheme="blue" fontSize="md" px={2} borderRadius="md">
+                  <Badge 
+                    position="absolute" top="-4" left="50%" transform="translateX(-50%)" 
+                    colorScheme="blue" fontSize="md" px={2} borderRadius="md" zIndex={10}
+                  >
                     {pos + 1}ª Carta
                   </Badge>
                 )}
@@ -100,14 +119,14 @@ export function Jogador() {
                   type="WHITE"
                   isFaceDown={!cartaRevelada}
                 />
-              </VStack>
+              </Box>
             ))}
           </Flex>
 
           {!cartaRevelada ? (
-            <VStack spacing={4}>
+            <VStack spacing={4} px={6}>
               <Text fontSize="md" color="gray.500" animation="pulse 2s infinite" textAlign="center">
-                Toque nas cartas para revelar aos outros
+                Toque nas cartas para revelar aos outros (deslize se houver várias)
               </Text>
               <Button colorScheme="red" variant="ghost" size="lg" onClick={cancelarEscolha}>
                 Cancelar Escolha
@@ -123,11 +142,15 @@ export function Jogador() {
     );
   }
 
-  // TELA 1: MÃO DE CARTAS NORMAL
+  // =========================================================================
+  // TELA 1: SELEÇÃO DAS CARTAS (MÃO) (MANTIDA IGUAL)
+  // =========================================================================
   return (
-    <Container minH="100vh" py={8} maxW="full" bg="gray.50">
-      
-      <Button pos="fixed" top={4} left={4} zIndex={10} _active={{ transform: 'none' }} onClick={() => navigate('/')}>
+    <Container minH="100vh" py={8} maxW="full" bg="gray.50" px={0} overflow="hidden">
+      <Button 
+        pos="fixed" top={4} left={4} zIndex={100} 
+        _active={{ transform: 'none' }} onClick={() => navigate('/')}
+      >
         Sair da Partida
       </Button>
 
@@ -135,16 +158,14 @@ export function Jogador() {
         Suas Cartas
       </Text>
 
-      {/* Adicionado um pb (padding-bottom) para a última carta não ficar escondida atrás do botão */}
-      {/* Mão de cartas com efeito de Carrossel (Deslizante) */}
       <Flex 
         w="full"
         overflowX="auto" 
         flexWrap="nowrap" 
         gap={6} 
-        px="20%" 
-        pt={8} /* <-- CORREÇÃO: Adicionamos esse respiro no topo para a carta poder pular livremente! */
-        pb={32}
+        px="15%" 
+        pt={16} 
+        pb={40}
         css={{
           scrollSnapType: 'x mandatory',
           WebkitOverflowScrolling: 'touch',
@@ -165,7 +186,7 @@ export function Jogador() {
               onClick={() => handleSelecionar(index)} 
               cursor="pointer"
               transition="all 0.2s"
-              transform={isSelecionada ? 'translateY(-15px)' : 'none'}
+              transform={isSelecionada ? 'translateY(-20px)' : 'none'}
               boxShadow={isSelecionada ? '0 0 0 4px #3182ce' : 'none'}
               borderRadius="10px"
               position="relative" 
@@ -173,8 +194,8 @@ export function Jogador() {
             >
               {isSelecionada && selecionadas.length > 1 && (
                 <Badge
-                  position="absolute" top="-4" right="-4" colorScheme="blue"
-                  fontSize="xl" px={3} py={1} borderRadius="full" zIndex={2} boxShadow="md"
+                  position="absolute" top="-5" right="-5" colorScheme="blue"
+                  fontSize="2xl" px={3} py={1} borderRadius="full" zIndex={20} boxShadow="lg"
                 >
                   {numeroOrdem}º
                 </Badge>
@@ -184,6 +205,30 @@ export function Jogador() {
           );
         })}
       </Flex>
+
+      {selecionadas.length > 0 && (
+        <Box 
+          pos="fixed" 
+          bottom={0} 
+          left={0} 
+          w="100%" 
+          p={6} 
+          bgGradient="linear(to-t, gray.50 80%, transparent)" 
+          zIndex={200}
+        >
+          <Button 
+            colorScheme="blue" 
+            size="lg" 
+            h="16" 
+            w="full"
+            fontSize="xl" 
+            boxShadow="dark-lg" 
+            onClick={confirmarCarta}
+          >
+            Jogar {selecionadas.length} {selecionadas.length === 1 ? 'carta' : 'cartas'}!
+          </Button>
+        </Box>
+      )}
     </Container>
   );
 }
