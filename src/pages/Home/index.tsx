@@ -1,45 +1,39 @@
-import { Container, Flex } from '@chakra-ui/react';
-
-import { AdBanner } from '@/components/AdBanner';
-
-import { CookiesModal } from '@/components/cookies-modal';
-import { Actions } from './actions';
-import { Contribution } from './contribution';
-import { Header } from './header';
-import { JoinMatch } from './join-match';
-import { Tags } from './tags';
+import { Container, Flex, Button, Heading } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 export function Home(): JSX.Element {
+  const navigate = useNavigate();
+
   return (
-    <>
-      <CookiesModal />
-
-      <Container
-        as={Flex}
-        maxW="1100px"
-        minH="100vh"
-        direction="column"
-        pos="relative"
-      >
-        <Header />
-
-        <Flex
-          as="main"
-          gap={{ base: '16', lg: '8' }}
-          mt={{ base: '8', lg: '16' }}
-          flexDir={{ base: 'column', lg: 'row' }}
+    <Container maxW="container.sm" minH="100vh" centerContent justifyContent="center">
+      <Heading mb={10} textAlign="center">Cards Against Humanity</Heading>
+      
+      <Flex direction="column" gap={6} w="full" px={4}>
+        <Button 
+          size="lg" 
+          bg="black" 
+          color="white" 
+          h="20" 
+          fontSize="xl"
+          _hover={{ bg: 'gray.800' }}
+          onClick={() => navigate('/mesa')}
         >
-          <Actions />
-
-          <Flex flexDir="column" gap="2" mt="-2" flex="1">
-            <JoinMatch />
-            <Contribution />
-          </Flex>
-        </Flex>
-
-        <Tags />
-        <AdBanner zoneId="ZONE_ID" />
-      </Container>
-    </>
+          Baralho de Perguntas (Mesa)
+        </Button>
+        
+        <Button 
+          size="lg" 
+          bg="white" 
+          color="black" 
+          border="2px solid black"
+          h="20" 
+          fontSize="xl"
+          _hover={{ bg: 'gray.100' }}
+          onClick={() => navigate('/jogador')}
+        >
+          Cartas de Respostas (Jogador)
+        </Button>
+      </Flex>
+    </Container>
   );
 }
