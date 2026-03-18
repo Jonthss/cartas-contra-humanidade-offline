@@ -38,9 +38,19 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
           color={isBlack ? 'white' : 'black'}
           border={isBlack ? 'none' : '2px solid black'}
           borderRadius="xl"
-          p={5}
+          
+          /* 1. ESPAÇAMENTO DAS BORDAS: 
+             p={5} é o padrão. Se na foto o texto está mais colado na borda, mude para p={3} ou p={4}.
+             Se estiver mais afastado das bordas, mude para p={6} ou p={8}. */
+          p={5} 
+          
           direction="column"
-          justify="space-between"
+          
+          /* 2. COMPORTAMENTO DA IMAGEM E DO TEXTO:
+             Se na sua foto a imagem está fixada lá no fundo da carta, mantenha justify="space-between".
+             Se na sua foto a imagem fica LOGO ABAIXO do texto, mude para justify="flex-start" */
+          justify="space-between" 
+          
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
@@ -56,12 +66,16 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
           <Image
             src="/cover.png"
             alt="CAH Logo"
-            h="24px"
+            h="auto" // Altura da foto
             w="auto"
             objectFit="contain"
             alignSelf="flex-start"
             filter={isBlack ? 'invert(100%)' : 'none'}
             opacity={isBlack ? 0.9 : 0.6}
+            
+            /* 3. DISTÂNCIA ENTRE FOTO E TEXTO:
+               Você pode adicionar a propriedade "mt" (margin-top) aqui para empurrar a foto para baixo.
+               Exemplo: mt={4} ou mt={8} (Só fará diferença se você mudou o justify ali em cima para flex-start) */
           />
         </Flex>
 

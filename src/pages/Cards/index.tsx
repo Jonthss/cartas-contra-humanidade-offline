@@ -32,7 +32,7 @@ export function Card({ message, type }: CardProps) {
       />
       
       <Text fontSize="xs" fontWeight="bold" opacity={isBlack ? 0.8 : 0.5}>
-        Cards Against Humanity
+        Cards Against Humanity Offline
       </Text>
     </Flex>
   );
