@@ -1,52 +1,51 @@
 import { useState } from 'react';
-import { Container, Flex, Text, Box } from '@chakra-ui/react';
-import { Card } from '@/components/Card';
-import { GoBack } from '@/components/GoBack';
+import { Container, Flex, Text, Button, Box } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { Card } from '../../components/Card';
 import { deck } from '../../data/cards';
 
-export function Jogador(): JSX.Element {
-  function sortearCartaBranca() {
+export function Jogador() {
+  const navigate = useNavigate();
+
+  function sortearCarta() {
     const randomIndex = Math.floor(Math.random() * deck.whiteCards.length);
     return deck.whiteCards[randomIndex];
   }
 
-  // Inicia com 4 cartas aleatórias
   const [mao, setMao] = useState([
-    sortearCartaBranca(),
-    sortearCartaBranca(),
-    sortearCartaBranca(),
-    sortearCartaBranca(),
+    sortearCarta(),
+    sortearCarta(),
+    sortearCarta(),
+    sortearCarta(),
   ]);
 
-  // Troca a carta que foi clicada por uma nova
   function jogarCarta(index: number) {
     const novaMao = [...mao];
-    novaMao[index] = sortearCartaBranca();
+    novaMao[index] = sortearCarta();
     setMao(novaMao);
   }
 
   return (
-    <Container maxW="container.md" minH="100vh" py={8} pos="relative">
-      <Box pos="absolute" top="4" left="4">
-        <GoBack />
-      </Box>
+    <Container minH="100vh" py={8} maxW="full" bg="gray.50">
+      <Button pos="absolute" top={4} left={4} onClick={() => navigate('/')}>
+        Voltar para o Menu
+      </Button>
 
-      <Text fontSize="2xl" fontWeight="bold" mt={12} mb={8} textAlign="center">
-        Suas Cartas (Toque para usar)
+      <Text fontSize="2xl" fontWeight="bold" mt={16} mb={8} textAlign="center">
+        Suas Cartas (Toque para jogar)
       </Text>
 
-      <Flex flexWrap="wrap" gap={6} justify="center">
+      <Flex flexWrap="wrap" gap={4} justify="center">
         {mao.map((carta, index) => (
           <Box 
             key={index} 
             onClick={() => jogarCarta(index)} 
             cursor="pointer"
-            transition="transform 0.2s"
-            _hover={{ transform: 'scale(1.05)' }}
+            transition="all 0.1s"
             _active={{ transform: 'scale(0.95)' }}
+            _hover={{ transform: 'translateY(-5px)' }}
           >
-            {/* O SEGREDO ESTÁ NESTA LINHA ABAIXO: */}
-            <Card message={carta} type="WHITE" animationType="auto" />
+            <Card message={carta} type="WHITE" />
           </Box>
         ))}
       </Flex>

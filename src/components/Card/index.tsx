@@ -1,87 +1,97 @@
-import { CARD_TOKEN } from '@/constants/globals';
-import { useState } from 'react';
+import { Box, Flex, Text, VStack, Image } from '@chakra-ui/react';
 
-import { WhiteLogo, BlackLogo } from './Logos';
-import styles from './styles.module.scss';
-
-interface CardProps extends Omit<CardType, 'id'> {
-  className?: string;
-  frontClassName?: string;
-  backClassName?: string;
-  messageClassName?: string;
-  animationType?: 'off' | 'revert' | 'hover' | 'auto' | 'rotating' | 'click';
-  animationDelay?: string;
-  animationClickShowBack?: boolean;
+interface CardProps {
+  message?: string;
+  type: 'BLACK' | 'WHITE';
+  isFaceDown?: boolean;
 }
 
-const animations = {
-  off: styles.cardAnimationOff,
-  hover: styles.cardAnimationHover,
-  auto: styles.cardAnimationAuto,
-  revert: styles.cardAnimationRevert,
-  rotating: styles.cardAnimationRotating,
-  click: styles.cardAnimationClick,
-};
-
-export function Card({
-  message,
-  type,
-  animationType = 'off',
-  animationDelay = '1s',
-  className = '',
-  messageClassName = '',
-  frontClassName = '',
-  backClassName = '',
-  animationClickShowBack = false,
-}: CardProps): JSX.Element {
-  const [clicked, setClicked] = useState(animationClickShowBack);
-
+export function Card({ message, type, isFaceDown = false }: CardProps) {
   const isBlack = type === 'BLACK';
-  const animation = animations[animationType];
-
-  function getFormatedMessage(): string {
-    const text =
-      message?.replaceAll(
-        CARD_TOKEN,
-        `<span class="${styles.question}"></span>`
-      ) || '';
-
-    return `<p class="${styles.message} ${messageClassName}">${text}</p>`;
-  }
-
-  function toggleClicked(): void {
-    if (animationType === 'click') {
-      setClicked(!clicked);
-    }
-  }
-
-  const Logo = isBlack ? BlackLogo : WhiteLogo;
+  const textoLimpo = message ? message.replace(/%s/g, '______') : '';
 
   return (
-    <button
-      onClick={toggleClicked}
-      className={`${styles.card} ${isBlack ? styles.isBlack : ''} ${className}`}
+    <Box
+      w={{ base: "150px", md: "220px" }}
+      h={{ base: "220px", md: "300px" }}
+      style={{ perspective: "1000px" }}
+      userSelect="none"
     >
-      <div
-        className={`${styles.cardInner} ${
-          animationType !== 'click' ? animation : clicked ? animation : ''
-        }`}
-        style={{ animationDelay }}
+      <Box
+        w="100%"
+        h="100%"
+        position="relative"
+        style={{
+          transition: "transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1)",
+          transformStyle: "preserve-3d",
+          transform: isFaceDown ? 'rotateY(180deg)' : 'rotateY(0deg)'
+        }}
+        boxShadow="lg"
+        borderRadius="xl"
       >
-        <div className={`${styles.cardFront} ${frontClassName}`}>
-          <div>
-            <p className={styles.gameNameText}>Cards</p>
-            <p className={styles.gameNameText}>Against</p>
-            <p className={styles.gameNameText}>Humanity</p>
-          </div>
-          <Logo />
-        </div>
+        {/* FRENTE DA CARTA (Texto da Pergunta/Resposta) */}
+        <Flex
+          position="absolute"
+          w="100%"
+          h="100%"
+          bg={isBlack ? 'black' : 'white'}
+          color={isBlack ? 'white' : 'black'}
+          border={isBlack ? 'none' : '2px solid black'}
+          borderRadius="xl"
+          p={5}
+          direction="column"
+          justify="space-between"
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(0deg)"
+          }}
+        >
+          <Text 
+            fontSize={{ base: "md", md: "xl" }} 
+            fontWeight="bold" 
+            dangerouslySetInnerHTML={{ __html: textoLimpo }} 
+          />
+          
+          <Image
+            src="/cover.png"
+            alt="CAH Logo"
+            h="24px"
+            w="auto"
+            objectFit="contain"
+            alignSelf="flex-start"
+            filter={isBlack ? 'invert(100%)' : 'none'}
+            opacity={isBlack ? 0.9 : 0.6}
+          />
+        </Flex>
 
-        <div className={`${styles.cardBack} ${backClassName}`}>
-          <div dangerouslySetInnerHTML={{ __html: getFormatedMessage() }} />
-          <Logo />
-        </div>
-      </div>
-    </button>
+        {/* VERSO DA CARTA (Logo Offline) */}
+        <Flex
+          position="absolute"
+          w="100%"
+          h="100%"
+          bg={isBlack ? 'black' : 'white'}
+          color={isBlack ? 'white' : 'black'}
+          border={isBlack ? 'none' : '2px solid black'}
+          borderRadius="xl"
+          p={5}
+          direction="column"
+          justify="center"
+          align="center"
+          style={{
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            transform: "rotateY(180deg)"
+          }}
+        >
+          <VStack spacing={0} align="center">
+            <Text fontSize="2xl" fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Cards</Text>
+            <Text fontSize="2xl" fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Against</Text>
+            <Text fontSize="2xl" fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Humanity</Text>
+            <Text fontSize="lg" fontWeight="bold" textAlign="center" opacity={isBlack ? 0.8 : 0.6} mt={1}>Offline</Text>
+          </VStack>
+        </Flex>
+      </Box>
+    </Box>
   );
 }

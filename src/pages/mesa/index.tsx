@@ -1,33 +1,34 @@
 import { useState } from 'react';
-import { Container, Flex, Button, Box } from '@chakra-ui/react';
-import { Card } from '@/components/Card';
-import { GoBack } from '@/components/GoBack';
+import { Container, Flex, Button } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import { Card } from '../../components/Card';
 import { deck } from '../../data/cards';
 
-export function Mesa(): JSX.Element {
+export function Mesa() {
+  const navigate = useNavigate();
+
   function sortearCarta() {
     const randomIndex = Math.floor(Math.random() * deck.blackCards.length);
     return deck.blackCards[randomIndex];
   }
 
-  const [perguntaAtual, setPerguntaAtual] = useState(sortearCarta);
+  const [pergunta, setPergunta] = useState(sortearCarta());
 
   return (
-    <Container minH="100vh" centerContent justifyContent="center" pos="relative">
-      <Box pos="absolute" top="4" left="4">
-        <GoBack />
-      </Box>
+    <Container minH="100vh" centerContent justifyContent="center" maxW="full" bg="gray.50">
+      <Button pos="absolute" top={4} left={4} onClick={() => navigate('/')}>
+        Voltar para o Menu
+      </Button>
 
-      <Flex direction="column" align="center" gap={8} mt={10}>
-        {/* Olha a mudança aqui embaixo! */}
-        <Card message={perguntaAtual} type="BLACK" animationType="auto" />
+      <Flex direction="column" align="center" gap={8} mt={12}>
+        <Card message={pergunta} type="BLACK" />
         
         <Button 
           size="lg" 
           colorScheme="blue" 
-          onClick={() => setPerguntaAtual(sortearCarta())}
+          onClick={() => setPergunta(sortearCarta())}
         >
-          Sortear / Pular Pergunta
+          Sortear Nova Pergunta
         </Button>
       </Flex>
     </Container>
