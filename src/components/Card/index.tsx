@@ -10,14 +10,13 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
   const isBlack = type === 'BLACK';
   const textoLimpo = message ? message.replace(/%s/g, '______') : '';
 
-  // Cores exatas do projeto original
-  const corFundo = isBlack ? '#000000' : '#ffffff';
+  const corFundo = isBlack ? '#191919' : '#ffffff';
   const corTexto = isBlack ? '#ffffff' : '#191919';
 
   return (
     <Box
-      w="280px" // Largura original
-      h="350px" // Altura original
+      w={{ base: "220px", md: "280px" }} // Menor no celular, original no PC
+      h={{ base: "280px", md: "350px" }} // Menor no celular, original no PC
       style={{ perspective: "1000px" }}
       userSelect="none"
     >
@@ -30,29 +29,29 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
           transformStyle: "preserve-3d",
           transform: isFaceDown ? 'rotateY(180deg)' : 'rotateY(0deg)'
         }}
-        borderRadius="10px" // Raio da borda original
+        borderRadius="10px"
       >
-        {/* FRENTE DA CARTA (Texto da Pergunta/Resposta) */}
+        {/* FRENTE DA CARTA */}
         <Flex
           position="absolute"
           w="100%"
           h="100%"
           bg={corFundo}
           color={corTexto}
-          border={`2px solid ${corTexto}`} // Borda original
+          border={`2px solid ${corTexto}`}
           borderRadius="10px"
-          padding="2rem 1rem" // Espaçamento original (padding)
+          padding={{ base: "1.2rem", md: "2rem 1rem" }} // Espaçamento adaptável
           direction="column"
           justify="space-between"
           style={{
             backfaceVisibility: "hidden",
             WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(0deg)",
-            wordBreak: "break-word" // Quebra de linha original
+            wordBreak: "break-word"
           }}
         >
           <Text 
-            fontSize="1.6rem" // Tamanho da fonte original
+            fontSize={{ base: "1.2rem", md: "1.6rem" }} // Fonte um pouco menor no celular
             textAlign="left"
             dangerouslySetInnerHTML={{ __html: textoLimpo }} 
           />
@@ -60,14 +59,14 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
           <Image
             src={isBlack ? "/image-invert.png" : "/cover.png"}
             alt="CAH Logo"
-            h="40px"
+            h={{ base: "30px", md: "40px" }}
             w="auto"
             objectFit="contain"
             alignSelf="flex-start"
           />
         </Flex>
 
-        {/* VERSO DA CARTA (Logo Offline) */}
+        {/* VERSO DA CARTA */}
         <Flex
           position="absolute"
           w="100%"
@@ -87,10 +86,10 @@ export function Card({ message, type, isFaceDown = false }: CardProps) {
           }}
         >
           <VStack spacing={0} align="center">
-            <Text fontSize="2xl" fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Cards</Text>
-            <Text fontSize="2xl" fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Against</Text>
-            <Text fontSize="2xl" fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Humanity</Text>
-            <Text fontSize="lg" fontWeight="bold" textAlign="center" opacity={isBlack ? 0.8 : 0.6} mt={1}>Offline</Text>
+            <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Cards</Text>
+            <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Against</Text>
+            <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" textAlign="center" opacity={isBlack ? 1 : 0.8}>Humanity</Text>
+            <Text fontSize={{ base: "md", md: "lg" }} fontWeight="bold" textAlign="center" opacity={isBlack ? 0.8 : 0.6} mt={1}>Offline</Text>
           </VStack>
         </Flex>
       </Box>

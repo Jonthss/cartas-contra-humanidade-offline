@@ -136,36 +136,45 @@ export function Jogador() {
       </Text>
 
       {/* Adicionado um pb (padding-bottom) para a última carta não ficar escondida atrás do botão */}
-      <Flex flexWrap="wrap" gap={8} justify="center" px={4} pb={32}>
+      {/* Mão de cartas com efeito de Carrossel (Deslizante) */}
+      <Flex 
+        w="full"
+        overflowX="auto" 
+        flexWrap="nowrap" 
+        gap={6} 
+        px="20%" 
+        pt={8} /* <-- CORREÇÃO: Adicionamos esse respiro no topo para a carta poder pular livremente! */
+        pb={32}
+        css={{
+          scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch',
+          '&::-webkit-scrollbar': { display: 'none' },
+          scrollbarWidth: 'none',
+        }}
+      >
         {mao.map((carta, index) => {
           const indexNaSelecao = selecionadas.indexOf(index);
           const isSelecionada = indexNaSelecao !== -1;
-          const numeroOrdem = indexNaSelecao + 1; // 1, 2, 3...
+          const numeroOrdem = indexNaSelecao + 1;
 
           return (
             <Box 
               key={index}
+              flexShrink={0} 
+              scrollSnapAlign="center" 
               onClick={() => handleSelecionar(index)} 
               cursor="pointer"
               transition="all 0.2s"
               transform={isSelecionada ? 'translateY(-15px)' : 'none'}
               boxShadow={isSelecionada ? '0 0 0 4px #3182ce' : 'none'}
               borderRadius="10px"
-              position="relative" // Necessário para a etiqueta flutuar aqui dentro
+              position="relative" 
+              zIndex={isSelecionada ? 10 : 1} /* <-- Previne que a carta fique atrás das outras */
             >
-              {/* Etiqueta flutuante mostrando a ORDEM da escolha (1º, 2º) */}
               {isSelecionada && selecionadas.length > 1 && (
                 <Badge
-                  position="absolute"
-                  top="-4"
-                  right="-4"
-                  colorScheme="blue"
-                  fontSize="xl"
-                  px={3}
-                  py={1}
-                  borderRadius="full"
-                  zIndex={2}
-                  boxShadow="md"
+                  position="absolute" top="-4" right="-4" colorScheme="blue"
+                  fontSize="xl" px={3} py={1} borderRadius="full" zIndex={2} boxShadow="md"
                 >
                   {numeroOrdem}º
                 </Badge>
@@ -175,24 +184,6 @@ export function Jogador() {
           );
         })}
       </Flex>
-
-      {/* BOTÃO FLUTUANTE DE CONFIRMAÇÃO NO RODAPÉ */}
-      {selecionadas.length > 0 && (
-        <Flex 
-          pos="fixed" 
-          bottom={0} 
-          left={0} 
-          w="100%" 
-          p={6} 
-          bgGradient="linear(to-t, gray.50 60%, transparent)" 
-          justify="center"
-          zIndex={10}
-        >
-          <Button colorScheme="blue" size="lg" h="16" px={10} fontSize="xl" boxShadow="xl" onClick={confirmarCarta}>
-            Jogar {selecionadas.length} {selecionadas.length === 1 ? 'carta' : 'cartas'}!
-          </Button>
-        </Flex>
-      )}
     </Container>
   );
 }
